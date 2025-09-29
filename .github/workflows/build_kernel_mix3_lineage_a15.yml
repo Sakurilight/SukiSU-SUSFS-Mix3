@@ -41,19 +41,7 @@ jobs:
         with:
           path: kernel
           submodules: recursive
-          fetch-depth: 0
-
-      - name: 切换子模块
-        working-directory: kernel  # 主仓库目录（子模块的父目录）
-        run: |
-          SUBMODULE_PATH="KernelSU"    
-          cd $SUBMODULE_PATH    
-          git fetch --all
-          echo "子模块 KernelSU 的远程分支列表："
-          git branch -r
-          git checkout main
-          echo "子模块 KernelSU 当前分支："
-          git branch        
+          fetch-depth: 1
           
       - name: 设置Clang缓存
         id: cache-clang
@@ -85,6 +73,7 @@ jobs:
                CROSS_COMPILE=aarch64-linux-gnu- \
                CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
                LOCALVERSION=-${{ env.KERNEL_LOCALVERSION }} \
+               BRANCH_NAME=${{ github.ref_name }} \ # 传入触发工作流的分支名
                vendor/xiaomi/mi845_defconfig \
                vendor/xiaomi/${{ matrix.device }}.config all
 
