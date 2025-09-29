@@ -41,7 +41,7 @@ jobs:
         with:
           path: kernel
           submodules: recursive
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: 切换到目标分支
         working-directory: kernel  
