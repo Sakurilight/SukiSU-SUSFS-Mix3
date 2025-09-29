@@ -43,22 +43,15 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      # 新增：切换子模块 KernelSU 到 nongki 分支
-      - name: 切换子模块 KernelSU 到 nongki 分支
+      - name: 切换子模块
         working-directory: kernel  # 主仓库目录（子模块的父目录）
         run: |
-          # 子模块路径（根据 .gitmodules 配置，这里是 KernelSU）
           SUBMODULE_PATH="KernelSU"    
-          # 进入子模块目录
           cd $SUBMODULE_PATH    
-          # 同步子模块的远程分支信息
           git fetch --all
-          # 查看子模块的远程分支（调试用，可选）
           echo "子模块 KernelSU 的远程分支列表："
           git branch -r
-          # 切换到子模块的 susfs-main 分支
-          git checkout susfs-main
-          # 验证当前分支
+          git checkout main
           echo "子模块 KernelSU 当前分支："
           git branch        
           
