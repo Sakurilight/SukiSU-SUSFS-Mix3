@@ -73,7 +73,7 @@ jobs:
                CROSS_COMPILE=aarch64-linux-gnu- \
                CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
                LOCALVERSION=-${{ env.KERNEL_LOCALVERSION }} \
-               BRANCH_NAME=${{ github.ref_name }} 
+               BRANCH_NAME=${{ github.ref_name }} \
                vendor/xiaomi/mi845_defconfig \
                vendor/xiaomi/${{ matrix.device }}.config all
 
