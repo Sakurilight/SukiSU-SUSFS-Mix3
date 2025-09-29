@@ -68,13 +68,30 @@ jobs:
         working-directory: kernel
         run: |
           export PATH="$GITHUB_WORKSPACE/clang/bin:$PATH"
+
+          cd KernelSU || exit 1 
+          CUSTOM_HASH="zakozako" 
+          CUSTOM_BRANCH="susfs-main"       
+          git() {
+            if [ "$1" = "rev-parse" ] && [ "$2" = "--short=8" ] && [ "$3" = "HEAD" ]; then
+              echo "$CUSTOM_HASH"  
+              return 0
+            elif [ "$1" = "rev-parse" ] && [ "$2" = "--abbrev-ref" ] && [ "$3" = "HEAD" ]; then
+              echo "$CUSTOM_BRANCH"  
+              return 0
+            else
+              command git "$@"  
+            fi
+          }
+          export -f git  # 将函数导出为环境变量，确保子进程可调用
+    
+          # 返回主内核目录，开始编译（此时 KernelSU 子模块编译时会使用重定义的 git 命令）
+          cd .. || exit 1
           make O=out LLVM=1 LLVM_IAS=1 ARCH=arm64 \
                -j$(nproc) CC="ccache clang" \
                CROSS_COMPILE=aarch64-linux-gnu- \
                CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
                LOCALVERSION=-${{ env.KERNEL_LOCALVERSION }} \
-               CUSTOM_VERSION_HASH="zakozako" \
-               BRANCH_NAME="susfs-main" \
                vendor/xiaomi/mi845_defconfig \
                vendor/xiaomi/${{ matrix.device }}.config all
 
