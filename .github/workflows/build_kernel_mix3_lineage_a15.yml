@@ -74,7 +74,7 @@ jobs:
                CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
                LOCALVERSION=-${{ env.KERNEL_LOCALVERSION }} \
                CUSTOM_VERSION_HASH="zakozako" \
-               BRANCH_NAME=susfs-main \
+               BRANCH_NAME="susfs-main" \
                vendor/xiaomi/mi845_defconfig \
                vendor/xiaomi/${{ matrix.device }}.config all
 
