@@ -69,39 +69,7 @@ jobs:
       - name: 编译内核
         working-directory: kernel
         run: |
-          export PATH="$GITHUB_WORKSPACE/clang/bin:$PATH"
-
-          # 定义自定义哈希和分支（替换为你的内容）
-          CUSTOM_HASH="nongki1234"
-          CUSTOM_BRANCH="nongki"
-    
-          # 1. 创建 Git 包装器脚本（直接硬编码自定义值，避免变量传递问题）
-          cat > git_wrapper.sh << 'EOF'
-          #!/bin/bash
-          # 输出调试信息（查看是否被调用）
-          echo "Git wrapper called with: $@" >> /tmp/git_wrapper.log
-    
-          # 拦截哈希获取命令
-          if [ "$1" = "rev-parse" ] && [ "$2" = "--short=8" ] && [ "$3" = "HEAD" ]; then
-            echo "nongki1234"  # 直接硬编码自定义哈希
-            exit 0
-          # 拦截分支获取命令
-          elif [ "$1" = "rev-parse" ] && [ "$2" = "--abbrev-ref" ] && [ "$3" = "HEAD" ]; then
-            echo "nongki"  # 直接硬编码自定义分支
-            exit 0
-          else
-            # 其他命令调用真实 Git
-            command git "$@"
-          fi
-          EOF
-          chmod +x git_wrapper.sh
-    
-          # 2. 进入 KernelSU 子模块目录，临时替换 git 命令（创建软链接）
-          cd KernelSU || exit 1
-          mv /usr/bin/git /usr/bin/git_real  # 临时备份系统 Git
-          ln -s "$GITHUB_WORKSPACE/kernel/git_wrapper.sh" /usr/bin/git  # 替换为包装器
-          cd .. || exit 1
-    
+          export PATH="$GITHUB_WORKSPACE/clang/bin:$PATH"    
           make O=out LLVM=1 LLVM_IAS=1 ARCH=arm64 \
                -j$(nproc) CC="ccache clang" \
                CROSS_COMPILE=aarch64-linux-gnu- \
